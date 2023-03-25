@@ -20,6 +20,17 @@
     <template #loading> Carregando registros. Aguarde ... </template>
 
     <Column field="name" header="Nome"></Column>
+    <Column style="flex: 0 0 4rem">
+      <template #body="{ data }">
+        <Button
+          type="button"
+          icon="pi pi-window-maximize"
+          text
+          size="large"
+          @click="openDialog(data)"
+        />
+      </template>
+    </Column>
   </DataTable>
   <Paginator
     v-if="!loading"
@@ -31,19 +42,31 @@
     template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
     currentPageReportTemplate="Página {currentPage} de {totalPages}"
   />
+  <CharactersDetail
+    v-if="openDialogDetails"
+    v-model:visible="openDialogDetails"
+    :character="character"
+    @onClose="onClose()"
+  ></CharactersDetail>
 </template>
   
 <script>
 import axios from "axios";
+import CharactersDetail from "./CharactersDetail.vue";
 
 export default {
   name: "CharactersList",
+  components: {
+    CharactersDetail,
+  },
   data() {
     return {
       listaPersonagens: [],
       page: 0,
       filter: "",
       loading: false,
+      character: {},
+      openDialogDetails: false,
     };
   },
   mounted() {
@@ -79,6 +102,14 @@ export default {
       );
       this.listaPersonagens = data;
       this.loading = false;
+    },
+    openDialog(data) {
+      this.character = data;
+      this.openDialogDetails = true;
+    },
+    onClose() {
+      this.openDialogDetails = false;
+      this.character = {};
     },
   },
 };
