@@ -1,34 +1,49 @@
 <template>
-    <Button label="Listar Personagens" @click="listarPersonagens"/>
-        <DataTable :value="listaPersonagens" v-if="this.listaPersonagens.length" tableStyle="min-width: 50rem">
-            <Column field="name" header="Nome"></Column>
-            <Column field="birth_year" header="Ano de Aniversario"></Column>
-            <Column field="gender" header="Genero"></Column>
-            <Column field="eye_color" header="Cor dos olhos"></Column>
-        </DataTable>
+  <DataTable :value="listaPersonagens" tableStyle="min-width: 50rem">
+    <Column field="name" header="Nome"></Column>
+  </DataTable>
+  <Paginator
+    :rows="1"
+    v-model:first="page"
+    :totalPages="82"
+    :totalRecords="9"
+    @page="otherPage($event)"
+    template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
+    currentPageReportTemplate="Página {currentPage} de {totalPages}"
+  />
 </template>
   
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-    name: 'CharactersList',
-    data() {
-        return {
-            listaPersonagens: []
-        }
+  name: "CharactersList",
+  data() {
+    return {
+      listaPersonagens: [],
+      page: 0,
+    };
+  },
+  mounted() {
+    this.$service = "http://localhost:3000/star_wars/characters";
+    this.load();
+  },
+  methods: {
+    async load() {
+      const { data } = await axios.get(this.$service, {});
+      this.listaPersonagens = data;
     },
-    methods: {
-        async listarPersonagens() {
-            const { data } = await axios.get("http://localhost:3000/star_wars", {});
-            this.listaPersonagens = data;
-            return this.listaPersonagens;
-        }
-    }
+    async otherPage() {
+      const { data } = await axios.get(
+        `${this.$service}/otherPage/${this.page + 1}`,
+        {}
+      );
+      this.listaPersonagens = data;
+    },
+  },
 };
 </script>
   
 <style scoped>
-
 </style>
   
