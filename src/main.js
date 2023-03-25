@@ -11,6 +11,7 @@ import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
+import InputText from 'primevue/inputtext';
 
 const app = createApp(App);
 app.use(PrimeVue);
@@ -20,5 +21,6 @@ app.component('Dialog', Dialog);
 app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.component('Paginator', Paginator);
+app.component('InputText', InputText);
 
 app.mount('#app');
