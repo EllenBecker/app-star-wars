@@ -1,15 +1,4 @@
 <template>
-  <div class="flex justify-content-end">
-    <span class="p-input-icon-left">
-      <i class="pi pi-search" />
-      <InputText
-        type="text"
-        class="p-inputtext-lg"
-        v-model="filter"
-        placeholder="Pesquisar personagem"
-      />
-    </span>
-  </div>
   <DataTable
     :value="listaPersonagens"
     tableStyle="min-width: 50rem"
@@ -19,8 +8,38 @@
     <template #empty> Nenhum registro encontrado. </template>
     <template #loading> Carregando registros. Aguarde ... </template>
 
+    <template #header>
+      <table
+        align="center"
+        border="0"
+        cellpadding="1"
+        cellspacing="10"
+        style="width: 100%"
+      >
+        <tbody>
+          <tr>
+            <td>
+              <span class="font-bold text-5" style="font-size: 30px"
+                >Lista de Personagens do Star Wars</span
+              >
+            </td>
+            <td>
+              <span class="p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText
+                  type="text"
+                  class="p-inputtext-lg"
+                  v-model="filter"
+                  placeholder="Pesquisar"
+                />
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
     <Column field="name" header="Nome"></Column>
-    <Column style="flex: 0 0 4rem">
+    <Column headerStyle="width: 5rem">
       <template #body="{ data }">
         <Button
           type="button"
@@ -31,17 +50,20 @@
         />
       </template>
     </Column>
+    <template #footer>
+      <Paginator
+        v-if="!loading"
+        :rows="1"
+        v-model:first="page"
+        :totalPages="82"
+        :totalRecords="9"
+        @page="otherPage($event)"
+        template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
+        currentPageReportTemplate="Página {currentPage} de {totalPages}"
+      />
+    </template>
   </DataTable>
-  <Paginator
-    v-if="!loading"
-    :rows="1"
-    v-model:first="page"
-    :totalPages="82"
-    :totalRecords="9"
-    @page="otherPage($event)"
-    template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
-    currentPageReportTemplate="Página {currentPage} de {totalPages}"
-  />
+
   <CharactersDetail
     v-if="openDialogDetails"
     v-model:visible="openDialogDetails"
