@@ -13,9 +13,12 @@ import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
 import InputText from 'primevue/inputtext';
 import Divider from 'primevue/divider';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App);
 app.use(PrimeVue);
+app.use(ToastService);
 /* eslint-disable */
 app.component('Button', Button);
 app.component('Dialog', Dialog);
@@ -24,5 +27,6 @@ app.component('Column', Column);
 app.component('Paginator', Paginator);
 app.component('InputText', InputText);
 app.component('Divider', Divider);
+app.component('Toast', Toast);
 
 app.mount('#app');

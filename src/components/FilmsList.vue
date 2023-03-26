@@ -30,9 +30,20 @@ export default {
     async load() {
       this.loading = true;
       for (const film of this.films) {
-        const idFilm = film.substring(27).replaceAll("/", "");
-        const { data } = await axios.get(`${this.$service}/${idFilm}`, {});
-        this.listFilms.push(data);
+        try {
+          const idFilm = film.split("/").slice(-2, -1)[0];
+          const { data } = await axios.get(`${this.$service}/${idFilm}`, {});
+          this.listFilms.push(data);
+        } catch (err) {
+          this.$toast.add({
+            severity: "error",
+            summary: "Erro ao buscar filmes!",
+            detail: err,
+            life: 3000,
+          });
+          this.loading = false;
+          return;
+        }
       }
       this.loading = false;
     },

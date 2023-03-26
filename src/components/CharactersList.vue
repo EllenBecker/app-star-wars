@@ -1,4 +1,6 @@
 <template>
+  <Toast />
+
   <DataTable
     :value="listCharacters"
     tableStyle="min-width: 50rem"
@@ -105,9 +107,18 @@ export default {
   methods: {
     async load() {
       this.loading = true;
-      const { data } = await axios.get(this.$service, {});
-      this.totalRecords = data?.totalPages;
-      this.listCharacters = data?.items;
+      try {
+        const { data } = await axios.get(this.$service, {});
+        this.totalRecords = data?.totalPages;
+        this.listCharacters = data?.items;
+      } catch (err) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Erro ao listar personagens!",
+          detail: err,
+          life: 3000,
+        });
+      }
       this.loading = false;
     },
     async otherPage() {
@@ -120,20 +131,39 @@ export default {
       } else {
         url = `${this.$service}/otherPage/${this.page + 1}`;
       }
-      const { data } = await axios.get(url, {});
-      this.totalRecords = data?.totalPages;
-      this.listCharacters = data?.items;
+      try {
+        const { data } = await axios.get(url, {});
+        this.totalRecords = data?.totalPages;
+        this.listCharacters = data?.items;
+      } catch (err) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Erro ao mudar de pagina!",
+          detail: err,
+          life: 3000,
+        });
+      }
       this.loading = false;
     },
     async search() {
       this.page = 0;
       this.loading = true;
-      const { data } = await axios.get(
-        `${this.$serviceSearch}/${this.filter}`,
-        {}
-      );
-      this.totalRecords = data?.totalPages;
-      this.listCharacters = data?.items;
+      try {
+        const { data } = await axios.get(
+          `${this.$serviceSearch}/${this.filter}`,
+          {}
+        );
+        this.totalRecords = data?.totalPages;
+        this.listCharacters = data?.items;
+      } catch (err) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Erro ao fazer pesquisa!",
+          detail: err,
+          life: 3000,
+        });
+      }
+
       this.loading = false;
     },
     openDialog(data) {
