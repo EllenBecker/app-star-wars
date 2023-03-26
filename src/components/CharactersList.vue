@@ -1,6 +1,6 @@
 <template>
   <DataTable
-    :value="listaPersonagens"
+    :value="listCharacters"
     tableStyle="min-width: 50rem"
     :loading="loading"
     :globalFilterFields="['name']"
@@ -53,10 +53,9 @@
     <template #footer>
       <Paginator
         v-if="!loading"
-        :rows="1"
+        :rows="perPage"
+        :totalRecords="totalRecords"
         v-model:first="page"
-        :totalPages="82"
-        :totalRecords="9"
         @page="otherPage($event)"
         template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
         currentPageReportTemplate="Página {currentPage} de {totalPages}"
@@ -83,8 +82,10 @@ export default {
   },
   data() {
     return {
-      listaPersonagens: [],
+      listCharacters: [],
       page: 0,
+      perPage: 1,
+      totalRecords: 1,
       filter: "",
       loading: false,
       character: {},
@@ -93,6 +94,7 @@ export default {
   },
   mounted() {
     this.$service = "http://localhost:3000/star_wars/characters";
+    this.$serviceSearch = "http://localhost:3000/star_wars/characters/search";
     this.load();
   },
   watch: {
@@ -104,25 +106,34 @@ export default {
     async load() {
       this.loading = true;
       const { data } = await axios.get(this.$service, {});
-      this.listaPersonagens = data;
+      this.totalRecords = data?.totalPages;
+      this.listCharacters = data?.items;
       this.loading = false;
     },
     async otherPage() {
       this.loading = true;
-      const { data } = await axios.get(
-        `${this.$service}/otherPage/${this.page + 1}`,
-        {}
-      );
-      this.listaPersonagens = data;
+      let url;
+      if (this.filter) {
+        url = `${this.$serviceSearch}/${this.filter}/otherPage/${
+          this.page + 1
+        }`;
+      } else {
+        url = `${this.$service}/otherPage/${this.page + 1}`;
+      }
+      const { data } = await axios.get(url, {});
+      this.totalRecords = data?.totalPages;
+      this.listCharacters = data?.items;
       this.loading = false;
     },
     async search() {
+      this.page = 0;
       this.loading = true;
       const { data } = await axios.get(
-        `${this.$service}/search/${this.filter}`,
+        `${this.$serviceSearch}/${this.filter}`,
         {}
       );
-      this.listaPersonagens = data;
+      this.totalRecords = data?.totalPages;
+      this.listCharacters = data?.items;
       this.loading = false;
     },
     openDialog(data) {
