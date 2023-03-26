@@ -3,42 +3,30 @@
 
   <DataTable
     :value="listCharacters"
-    tableStyle="min-width: 50rem"
+    class="w-full"
     :loading="loading"
     :globalFilterFields="['name']"
   >
     <template #empty> Nenhum registro encontrado. </template>
-    <template #loading> Carregando registros. Aguarde ... </template>
-
     <template #header>
-      <table
-        align="center"
-        border="0"
-        cellpadding="1"
-        cellspacing="10"
-        style="width: 100%"
-      >
-        <tbody>
-          <tr>
-            <td>
-              <span class="font-bold text-5" style="font-size: 30px"
-                >Lista de Personagens do Star Wars</span
-              >
-            </td>
-            <td>
-              <span class="p-input-icon-left">
-                <i class="pi pi-search" />
-                <InputText
-                  type="text"
-                  class="p-inputtext-lg"
-                  v-model="filter"
-                  placeholder="Pesquisar"
-                />
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+        <div>
+          <span class="font-bold text-5" style="font-size: 30px"
+            >Lista de Personagens do Star Wars</span
+          >
+        </div>
+        <div class="mt-2 md:mt-0">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search" />
+            <InputText
+              type="text"
+              class="p-inputtext-lg"
+              v-model="filter"
+              placeholder="Pesquisar"
+            />
+          </span>
+        </div>
+      </div>
     </template>
     <Column field="name" header="Nome"></Column>
     <Column headerStyle="width: 5rem">
@@ -53,15 +41,17 @@
       </template>
     </Column>
     <template #footer>
-      <Paginator
-        v-if="!loading"
-        :rows="perPage"
-        :totalRecords="totalRecords"
-        v-model:first="page"
-        @page="otherPage($event)"
-        template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
-        currentPageReportTemplate="Página {currentPage} de {totalPages}"
-      />
+      <div class="flex items-center justify-center mt-4">
+        <Paginator
+          v-if="!loading"
+          :rows="perPage"
+          :totalRecords="totalRecords"
+          v-model:first="page"
+          @page="otherPage($event)"
+          template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
+          currentPageReportTemplate="Página {currentPage} de {totalPages}"
+        />
+      </div>
     </template>
   </DataTable>
 
@@ -146,6 +136,7 @@ export default {
       this.loading = false;
     },
     async search() {
+      this.page = 0;
       this.page = 0;
       this.loading = true;
       try {
