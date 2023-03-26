@@ -2,7 +2,7 @@
   <Dialog
     modal
     header="Detalhes do personagem"
-    :style="{ width: '30vw' }"
+    :style="{ width: '40vw' }"
     :closable="false"
   >
     <table
@@ -10,7 +10,7 @@
       border="0"
       cellpadding="0"
       cellspacing="10"
-      style="width: 28vw"
+      style="width: 28vw; margin-bottom: 10px"
     >
       <tbody>
         <tr>
@@ -25,6 +25,10 @@
         </tr>
       </tbody>
     </table>
+    <Divider align="center" type="dotted">
+        <b>Lista de Filmes</b>
+    </Divider>
+    <FilmsList :films="character.films" />
     <template #footer>
       <Button label="Voltar" icon="pi pi-check" @click="$emit('onClose')" />
     </template>
@@ -32,9 +36,14 @@
 </template>
   
 <script>
+import FilmsList from "./FilmsList.vue";
+
 export default {
   emits: ["onClose"],
   name: "CharactersDetail",
+  components: {
+    FilmsList
+  },
   props: {
     character: {
       type: Object,

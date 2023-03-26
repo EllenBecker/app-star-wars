@@ -12,6 +12,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
 import InputText from 'primevue/inputtext';
+import Divider from 'primevue/divider';
 
 const app = createApp(App);
 app.use(PrimeVue);
@@ -22,5 +23,6 @@ app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.component('Paginator', Paginator);
 app.component('InputText', InputText);
+app.component('Divider', Divider);
 
 app.mount('#app');
