@@ -47,7 +47,7 @@
           :rows="perPage"
           :totalRecords="totalRecords"
           v-model:first="page"
-          @page="otherPage($event)"
+          @page="load($event)"
           template="PrevPageLink PageLinks NextPageLink CurrentPageReport"
           currentPageReportTemplate="Página {currentPage} de {totalPages}"
         />
@@ -86,19 +86,24 @@ export default {
   },
   mounted() {
     this.$service = "http://localhost:3000/star_wars/characters";
-    this.$serviceSearch = "http://localhost:3000/star_wars/characters/search";
     this.load();
   },
   watch: {
-    filter(newValue) {
-      newValue !== "" ? this.search() : this.load();
+    filter() {
+      this.page = 0;
+      this.load();
     },
   },
   methods: {
     async load() {
       this.loading = true;
       try {
-        const { data } = await axios.get(this.$service, {});
+        const { data } = await axios.get(this.$service, {
+          params: {
+            page: this.page + 1,
+            name: this.filter,
+          },
+        });
         this.totalRecords = data?.totalPages;
         this.listCharacters = data?.items;
       } catch (err) {
@@ -109,52 +114,6 @@ export default {
           life: 3000,
         });
       }
-      this.loading = false;
-    },
-    async otherPage() {
-      this.loading = true;
-      let url;
-      if (this.filter) {
-        url = `${this.$serviceSearch}/${this.filter}/otherPage/${
-          this.page + 1
-        }`;
-      } else {
-        url = `${this.$service}/otherPage/${this.page + 1}`;
-      }
-      try {
-        const { data } = await axios.get(url, {});
-        this.totalRecords = data?.totalPages;
-        this.listCharacters = data?.items;
-      } catch (err) {
-        this.$toast.add({
-          severity: "error",
-          summary: "Erro ao mudar de pagina!",
-          detail: err,
-          life: 3000,
-        });
-      }
-      this.loading = false;
-    },
-    async search() {
-      this.page = 0;
-      this.page = 0;
-      this.loading = true;
-      try {
-        const { data } = await axios.get(
-          `${this.$serviceSearch}/${this.filter}`,
-          {}
-        );
-        this.totalRecords = data?.totalPages;
-        this.listCharacters = data?.items;
-      } catch (err) {
-        this.$toast.add({
-          severity: "error",
-          summary: "Erro ao fazer pesquisa!",
-          detail: err,
-          life: 3000,
-        });
-      }
-
       this.loading = false;
     },
     openDialog(data) {
