@@ -23,7 +23,7 @@ export default {
     };
   },
   mounted() {
-    this.$service = "http://localhost:3000/star_wars/films";
+    this.$service = `${process.env.API_BASE_URL}/star_wars/films`;
     this.load();
   },
   methods: {

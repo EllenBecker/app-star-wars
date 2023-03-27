@@ -1,0 +1,5 @@
+# URL Backend Production
+API_BASE_URL=https://my-api-star-wars.herokuapp.com
+
+# URL Backend local
+API_BASE_URL=http://localhost:3000

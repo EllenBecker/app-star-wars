@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 #README
 README.md
+
+#Dotenv
+.env

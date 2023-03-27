@@ -85,7 +85,7 @@ export default {
     };
   },
   mounted() {
-    this.$service = "http://localhost:3000/star_wars/characters";
+    this.$service = `${process.env.API_BASE_URL}/star_wars/characters`;
     this.load();
   },
   watch: {
